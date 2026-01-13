@@ -1,0 +1,49 @@
+# ESA Pages 配置文件
+# 详见: https://help.aliyun.com/zh/edge-security-acceleration/esa/user-guide/build-pages
+{
+    "$schema": "https://esa.aliyun.com/schema/esa.jsonc",
+    "version": "1.0",
+    "build": {
+        "command": "npm install && npm run build",
+        "outputDirectory": "dist",
+        "rootDirectory": "frontend",
+        "nodeVersion": "18"
+    },
+    "routes": [
+        {
+            "src": "/api/(.*)",
+            "dest": "/functions/$1.js"
+        }
+    ],
+    "functions": {
+        "directory": "functions",
+        "runtime": "nodejs18.x"
+    },
+    "headers": [
+        {
+            "source": "/(.*)",
+            "headers": [
+                {
+                    "key": "X-Content-Type-Options",
+                    "value": "nosniff"
+                },
+                {
+                    "key": "X-Frame-Options",
+                    "value": "DENY"
+                },
+                {
+                    "key": "X-XSS-Protection",
+                    "value": "1; mode=block"
+                }
+            ]
+        }
+    ],
+    "cache": {
+        "static": {
+            "maxAge": 31536000
+        },
+        "html": {
+            "maxAge": 0
+        }
+    }
+}
